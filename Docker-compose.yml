@@ -1,0 +1,52 @@
+version: '3'
+services:
+  api-usuarios:
+    container_name: api-usuarios
+    build: .
+    ports: 
+      - 5000:5000
+    networks: 
+      - api-db-network
+    volumes:
+      - .:/app/usuarios
+    depends_on:
+    - db-usuarios
+  
+  db-usuarios:
+    container_name: db-usuarios
+    image: postgres
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      APP_DB_USER: "docker"
+      APP_DB_PASS: "docker"
+      APP_DB_NAME: "db_catraca"
+    volumes:
+       - db-usuarios-volume:/var/lib/postgresql/data
+       - ./db:/docker-entrypoint-initdb.d/
+    networks:
+      - api-db-network
+
+  db-pg-admin:
+    container_name: db-pg-admin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "adm@email.com"
+      PGADMIN_DEFAULT_PASSWORD: "adm123"
+    ports:
+      - 16543:80
+    depends_on:
+      - db-usuarios
+    networks:
+      - api-db-network
+    
+
+networks:
+  api-db-network:
+    driver: bridge
+
+volumes:
+  db-usuarios-volume:
+    driver: local
