@@ -12,14 +12,14 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         nome VARCHAR(100) NOT NULL,
         administrador boolean NOT NULL,
         email VARCHAR(100),
-        senha VARCHAR(100)
+        senha VARCHAR(100),
+        data_criacao DATE NOT NULL DEFAULT NOW()
     );
 
     create TABLE IF NOT EXISTS tb_fotos (
 	    idFoto SERIAL PRIMARY KEY,
-        cpf VARCHAR(100),
-        foto bytea NOT NULL,
-        tipo VARCHAR(10) REFERENCES tb_usuario(cpf)    
+        cpf VARCHAR(100) REFERENCES tb_usuario(cpf),
+        foto bytea NOT NULL
     );
   COMMIT;
 EOSQL
