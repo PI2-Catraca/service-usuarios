@@ -1,7 +1,8 @@
 import CryptoJS from 'crypto-js';
 import Database from '../config/db.js';
+import { postFotoQuery } from './fotosController.js';
 
-const getUserQuery = async (cpf) => {
+export const getUserQuery = async (cpf) => {
     const user = await Database.query(`SELECT * FROM tb_usuario WHERE cpf = $1`, [cpf]);
     return user;
 }
@@ -41,7 +42,8 @@ export const postUsuario = async (req, res) => {
         nome,
         administrador,
         email,
-        senha
+        senha,
+        fotos
     } = req.body;
 
     const hashPassword = CryptoJS.MD5(senha);
@@ -65,10 +67,15 @@ export const postUsuario = async (req, res) => {
                 [cpf, nome, administrador, email, hashPassword]
             );
 
-        res.status(201).send({
+        if(fotos?.length > 0) {
+            Promise.all(fotos.map(async (foto) => await postFotoQuery(cpf, foto)));
+        }
+        
+        return res.status(201).send({
             message: "Usuário cadastrado com sucesso!",
             data: {}
         });
+
     } catch (error) {
         return res.status(400).send({
             message: "Houve um erro ao cadastrar o usuário!",
