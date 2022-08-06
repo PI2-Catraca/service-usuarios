@@ -7,8 +7,6 @@ services:
       - 5000:5000
     networks: 
       - api-db-network
-    volumes:
-      - .:/app/usuarios
     depends_on:
     - db-usuarios
   
