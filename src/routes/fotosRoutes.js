@@ -3,7 +3,7 @@ const fotosRouter = express.Router();
 
 import { postFotos, getAllFotos, getFotosByCpf } from '../controller/fotosController.js'
 
-fotosRouter.post('/foto/nova', postFotos);
+fotosRouter.post('/fotos/nova', postFotos);
 fotosRouter.get('/fotos/todas', getAllFotos);
 fotosRouter.get('/fotos/usuario/:cpf', getFotosByCpf);
 
