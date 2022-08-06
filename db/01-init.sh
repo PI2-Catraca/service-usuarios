@@ -19,7 +19,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     create TABLE IF NOT EXISTS tb_fotos (
 	    idFoto SERIAL PRIMARY KEY,
         cpf VARCHAR(100) REFERENCES tb_usuario(cpf),
-        foto bytea NOT NULL
+        foto text NOT NULL
     );
   COMMIT;
 EOSQL
