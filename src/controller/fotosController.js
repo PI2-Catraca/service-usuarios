@@ -69,7 +69,9 @@ export const getAllFotos = async (req, res) => {
 
         return res.status(200).send({
             message: "Não há fotos cadastradas.",
-            data: {}
+            data: {
+                fotos: []
+            }
         });
 
     } catch (error) {

@@ -3,8 +3,35 @@ import Database from '../config/db.js';
 import { postFotoQuery } from './fotosController.js';
 
 export const getUserQuery = async (cpf) => {
-    const user = await Database.query(`SELECT * FROM tb_usuario WHERE cpf = $1`, [cpf]);
+    const user = await Database.query(`SELECT cpf, nome, email FROM tb_usuario WHERE cpf = $1`, [cpf]);
     return user;
+}
+
+export const getAllUsuarios = async (req, res) => {
+    try {
+        const { rows } = await Database.query(`SELECT cpf, nome, email FROM tb_usuario`);
+        if (rows.length > 0)
+            return res.status(201).send({
+                message: "Usuários recuperados com sucesso!",
+                data: {
+                    usuarios: rows
+                }
+            });
+
+        return res.status(200).send({
+            message: "Não há usuários cadastrados.",
+            data: {
+                usuarios: []
+            }
+        });
+    } catch (error) {
+        return res.status(400).send({
+            message: "Houve um erro ao recuperar os usuários!",
+            data: {
+                error
+            }
+        });
+    }
 }
 
 export const getUsuarioByCpf = async (req, res) => {
@@ -67,10 +94,10 @@ export const postUsuario = async (req, res) => {
                 [cpf, nome, administrador, email, hashPassword]
             );
 
-        if(fotos?.length > 0) {
+        if (fotos?.length > 0) {
             Promise.all(fotos.map(async (foto) => await postFotoQuery(cpf, foto)));
         }
-        
+
         return res.status(201).send({
             message: "Usuário cadastrado com sucesso!",
             data: {}
