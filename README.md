@@ -90,7 +90,7 @@ Body:
 
 ### Fotos
 #### Cadastrar fotos para um usuário
-**POST** `/foto/nova`  
+**POST** `/fotos/nova`  
 Body:  
 ~~~JSON
 {
