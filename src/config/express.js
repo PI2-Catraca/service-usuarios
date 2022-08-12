@@ -10,8 +10,12 @@ const BASE_PATH = '/api';
 
 app.set('port', process.env.PORT || 5000);
 app.use(cors());
-app.use(bodyParser.json());
-
+// app.use(bodyParser.json({
+//   parameterLimit: 100000,
+//   limit: '50mb',
+//   extended: true
+// }));
+app.use(bodyParser.json({limit: '50mb', type: 'application/json'}));
 app.use(BASE_PATH, helloWorldRouter);
 app.use(BASE_PATH, usuariosRouter);
 app.use(BASE_PATH, fotosRouter);

@@ -3,19 +3,19 @@ import { getUserQuery } from './usuarioController.js';
 
 export const postFotoQuery = async (cpf, foto) => {
     const novafoto = await Database
-        .query(`INSERT INTO tb_fotos (cpf, foto) VALUES ($1, $2)`,
+        .query(`INSERT INTO tb_foto (Usuario_cpf, foto) VALUES ($1, $2)`,
             [cpf, foto]
         );
     return novafoto;
 }
 
 const getAllFotosQuery = async () => {
-    const { rows } = await Database.query(`SELECT * FROM tb_fotos`);
+    const { rows } = await Database.query(`SELECT * FROM tb_foto`);
     return rows;
 }
 
 const getFotosByCpfQuery = async (cpf) => {
-    const { rows } = await Database.query(`SELECT * FROM tb_fotos WHERE cpf = $1`, [cpf]);
+    const { rows } = await Database.query(`SELECT * FROM tb_foto WHERE Usuario_cpf = $1`, [cpf]);
     return rows;
 }
 

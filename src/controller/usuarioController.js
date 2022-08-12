@@ -75,7 +75,7 @@ export const postUsuario = async (req, res) => {
 
     const hashPassword = CryptoJS.MD5(senha);
 
-    if (!cpf || !nome || !email || !senha || (administrador === null || administrador === undefined))
+    if (!cpf || !nome || (administrador === null || administrador === undefined))
         return res.status(400).send({
             message: "Todos os campos são obrigatórios!",
             data: {}
@@ -90,7 +90,7 @@ export const postUsuario = async (req, res) => {
             });
 
         const { rows } = await Database
-            .query(`INSERT INTO tb_usuario (cpf, nome, administrador, email, senha) VALUES ($1, $2, $3, $4, $5)`,
+            .query(`INSERT INTO tb_usuario (cpf, nome, admin, email, senha) VALUES ($1, $2, $3, $4, $5)`,
                 [cpf, nome, administrador, email, hashPassword]
             );
 
