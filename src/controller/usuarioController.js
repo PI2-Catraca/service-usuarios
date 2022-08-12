@@ -1,3 +1,4 @@
+import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import Database from '../config/db.js';
 import { postFotoQuery } from './fotosController.js';
@@ -97,6 +98,19 @@ export const postUsuario = async (req, res) => {
         if (fotos?.length > 0) {
             Promise.all(fotos.map(async (foto) => await postFotoQuery(cpf, foto)));
         }
+
+        const data = JSON.stringify({
+            nome,
+            cpf
+        })
+
+        console.log(data)
+
+        const response = await axios.get('https://6352-2804-1b3-6180-ae75-fc5f-95c1-a61e-dbc4.sa.ngrok.io', {
+            data
+        }).catch((err) => console.log(err));
+
+        console.log(response)
 
         return res.status(201).send({
             message: "Usuário cadastrado com sucesso!",
