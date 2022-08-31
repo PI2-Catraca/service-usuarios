@@ -18,7 +18,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE TABLE tb_foto (
       idFoto SERIAL PRIMARY KEY,
       Usuario_cpf VARCHAR(11),
-      foto text
+      foto text,
+      tipo VARCHAR(1)
     );
 
     CREATE TABLE tb_catraca (
