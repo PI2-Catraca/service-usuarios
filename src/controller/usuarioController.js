@@ -3,8 +3,13 @@ import CryptoJS from 'crypto-js';
 import Database from '../config/db.js';
 import { postFotoQuery } from './fotosController.js';
 
-export const getUserQuery = async (cpf) => {
+const getUserQuery = async (cpf) => {
     const user = await Database.query(`SELECT cpf, nome, email FROM tb_usuario WHERE cpf = $1`, [cpf]);
+    return user;
+}
+
+const getUsuarioByEmail = async (email) => {
+    const user = await Database.query(`SELECT * FROM tb_usuario WHERE email = $1`, [email]);
     return user;
 }
 
@@ -126,3 +131,44 @@ export const postUsuario = async (req, res) => {
         });
     };
 };
+
+export const login = async (req, res) => {
+    const {
+        email,
+        password
+    } = req.body;
+
+    // const hashPassword = CryptoJS.MD5(password);
+
+    if (!email || !password) {
+        return res.status(400).send({
+            message: "Todos os campos são obrigatórios",
+            data: {}
+        });
+    }
+
+    try {
+        const usuario = await getUsuarioByEmail(email);
+        if(usuario.rows.length <= 0) {
+            return res.status(400).send({
+                message: "E-mail ou senha incorretos",
+                data: {}
+            });
+        }
+
+        if(usuario.senha === password) {
+            return res.status(200).send({
+                message: "Login realizado com sucesso",
+                data: {}
+            })
+        }
+
+    } catch (error) {
+        return res.status(400).send({
+            message: "Houve um erro ao realizar o login.",
+            data: {
+                error
+            }
+        });
+    }
+}
