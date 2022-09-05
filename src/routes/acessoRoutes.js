@@ -5,6 +5,6 @@ import { getAllAcessos, getAcessoByCpf, getAcessoByIdCatraca } from '../controll
 
 acessosRouter.get('/acesso/todos', getAllAcessos);
 acessosRouter.get('/acesso/cpf/:cpf', getAcessoByCpf);
-acessosRouter.get('/acesso/idCatraca/:id', getAcessoByIdCatraca);
+acessosRouter.get('/acesso/idCatraca/:idCatraca', getAcessoByIdCatraca);
 
 export default acessosRouter;

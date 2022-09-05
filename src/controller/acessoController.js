@@ -50,7 +50,6 @@ export const getAcessoByCpf = async (req, res) => {
 
     try {
         const acessos = await getAcessosByCpfQuery(cpf);
-        console.log('acessos:', acessos);
 
         if(acessos.length > 0) {
             return res.status(200).send({
@@ -60,6 +59,11 @@ export const getAcessoByCpf = async (req, res) => {
                 }
             });
         }
+
+        return res.status(400).send({
+            message: "O CPF informado não possui acessos",
+            data: {}
+        });
 
     } catch (error) {
         return res.status(400).send({
@@ -75,7 +79,6 @@ export const getAcessoByIdCatraca = async (req, res) => {
     const { idCatraca } = req.params;
     try {
         const acessos = await getAcessosByIdCatracaQuery(idCatraca);
-        console.log('acessos:', acessos);
 
         if(acessos.length > 0) {
             return res.status(200).send({
@@ -85,6 +88,11 @@ export const getAcessoByIdCatraca = async (req, res) => {
                 }
             });
         }
+
+        return res.status(400).send({
+            message: "A catraca não possui acessos",
+            data: {}
+        });
         
     } catch(error) {
         return res.status(400).send({

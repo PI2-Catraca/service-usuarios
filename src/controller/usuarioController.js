@@ -3,7 +3,7 @@ import CryptoJS from 'crypto-js';
 import Database from '../config/db.js';
 import { postFotoQuery } from './fotosController.js';
 
-const getUserQuery = async (cpf) => {
+export const getUserQuery = async (cpf) => {
     const user = await Database.query(`SELECT cpf, nome, email FROM tb_usuario WHERE cpf = $1`, [cpf]);
     return user;
 }
@@ -44,7 +44,7 @@ export const getUsuarioByCpf = async (req, res) => {
     const { cpf } = req.params;
     try {
         const usuario = await getUserQuery(cpf);
-        console.log('usuario', usuario)
+        
         if (usuario.rows.length > 0)
             return res.status(201).send({
                 message: "Usuário encontrado.",
@@ -156,11 +156,16 @@ export const login = async (req, res) => {
             });
         }
 
-        if(usuario.senha === password) {
+        if(usuario.rows[0].senha === password) {
             return res.status(200).send({
                 message: "Login realizado com sucesso",
                 data: {}
             })
+        } else {
+            return res.status(400).send({
+                message: "E-mail ou senha incorretos",
+                data: {}
+            });
         }
 
     } catch (error) {
