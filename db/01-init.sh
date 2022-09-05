@@ -11,7 +11,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
       cpf VARCHAR(11) PRIMARY KEY,
       nome varchar(100),
       admin boolean,
-      email varchar(100),
+      email varchar(100) UNIQUE,
       senha varchar(100)
     );
 
