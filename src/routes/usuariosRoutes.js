@@ -1,11 +1,12 @@
 import express from 'express';
+import auth from '../middleware/auth.js';
 const usuariosRouter = express.Router();
 
-import { postUsuario, getUsuarioByCpf, getAllUsuarios, login } from '../controller/usuarioController.js';
+import { postUsuario, getUsuarioByCpf, getAllUsuarios, authUser } from '../controller/usuarioController.js';
 
 usuariosRouter.post('/usuario/novo', postUsuario);
-usuariosRouter.get('/usuario/todos', getAllUsuarios);
-usuariosRouter.get('/usuario/cpf/:cpf', getUsuarioByCpf);
-usuariosRouter.post('/usuario/login', login);
+usuariosRouter.get('/usuario/todos', auth, getAllUsuarios);
+usuariosRouter.get('/usuario/cpf/:cpf', auth, getUsuarioByCpf);
+usuariosRouter.post('/usuario/login', authUser);
 
 export default usuariosRouter;
