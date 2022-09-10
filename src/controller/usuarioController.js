@@ -1,12 +1,9 @@
 import axios from "axios";
 import bcrypt from "bcrypt";
-import CryptoJS from "crypto-js";
 import Database from "../config/db.js";
+import jwt from "jsonwebtoken";
 import { postFotoQuery } from "./fotosController.js";
-
-const saltRounds = 10;
-const myPlaintextPassword = "s0//P4$$w0rD";
-const someOtherPlaintextPassword = "not_bacon";
+import authConfig from "../config/auth.js";
 
 export const getUserQuery = async (cpf) => {
   const user = await Database.query(
@@ -18,7 +15,7 @@ export const getUserQuery = async (cpf) => {
 
 export const getUserByEmailQuery = async (email = "") => {
   const user = await Database.query(
-    `SELECT email, cpf, senha FROM tb_usuario WHERE email = $1`,
+    `SELECT nome, email, cpf, senha FROM tb_usuario WHERE email = $1`,
     [email]
   );
   return user;
@@ -97,6 +94,7 @@ export const authUser = async (req, res) => {
     const user = await getUserByEmailQuery(email);
     if (user.rows.length > 0) {
       const userToCompare = user.rows[0];
+
       if (!(await bcrypt.compare(senha, userToCompare.senha)))
         return res.status(400).send({
           message: "Senha incorreta.",
@@ -104,10 +102,15 @@ export const authUser = async (req, res) => {
             usuario: {},
           },
         });
+
+      const token = jwt.sign({ id: userToCompare.cpf }, authConfig.secret, {
+        expiresIn: 86400,
+      });
       return res.status(201).send({
         message: "Usuário autenticado.",
         data: {
-          usuario: userToCompare,
+          usuario: { nome: userToCompare.nome, email: userToCompare.email },
+          token,
         },
       });
     }
@@ -162,13 +165,13 @@ export const postUsuario = async (req, res) => {
 
     console.log(data);
 
-    // const response = await axios
-    //   .get("https://6352-2804-1b3-6180-ae75-fc5f-95c1-a61e-dbc4.sa.ngrok.io", {
-    //     data,
-    //   })
-    //   .catch((err) => console.log(err));
+    const response = await axios
+      .get("https://6352-2804-1b3-6180-ae75-fc5f-95c1-a61e-dbc4.sa.ngrok.io", {
+        data,
+      })
+      .catch((err) => console.log(err));
 
-    // console.log(response);
+    console.log(response);
 
     return res.status(201).send({
       message: "Usuário cadastrado com sucesso!",
