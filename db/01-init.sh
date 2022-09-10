@@ -15,6 +15,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
       senha varchar(100)
     );
 
+    INSERT INTO tb_usuario (cpf, nome, admin, email, senha)
+      VALUES ('00000000191', 'admin', true, 'admin@email.com', '\$2b\$10\$TRufaxXaudbGydIpRH6Pn.XZqGZXaLG/po4sInwkKi.7C.yDKPkIy');
+    
     CREATE TABLE tb_foto (
       idFoto SERIAL PRIMARY KEY,
       Usuario_cpf VARCHAR(11),
