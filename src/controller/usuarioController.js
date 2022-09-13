@@ -133,7 +133,10 @@ export const authUser = async (req, res) => {
 export const postUsuario = async (req, res) => {
   const { cpf, nome, administrador, email, senha, fotos } = req.body;
 
-  const hashPass = await bcrypt.hash(senha, 10);
+  let hashPass = undefined;
+  if(senha !== undefined) {
+    hashPass = await bcrypt.hash(senha, 10);
+  }
 
   if (!cpf || !nome || administrador === null || administrador === undefined)
     return res.status(400).send({
@@ -148,6 +151,8 @@ export const postUsuario = async (req, res) => {
         message: "Usuário já cadastrado.",
         data: {},
       });
+
+    console.log(cpf, nome, administrador, email, hashPass)
 
     const { rows } = await Database.query(
       `INSERT INTO tb_usuario (cpf, nome, admin, email, senha) VALUES ($1, $2, $3, $4, $5)`,
@@ -187,44 +192,3 @@ export const postUsuario = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  // const hashPassword = CryptoJS.MD5(password);
-
-  if (!email || !password) {
-    return res.status(400).send({
-      message: "Todos os campos são obrigatórios",
-      data: {},
-    });
-  }
-
-  try {
-    const usuario = await getUsuarioByEmail(email);
-    if (usuario.rows.length <= 0) {
-      return res.status(400).send({
-        message: "E-mail ou senha incorretos",
-        data: {},
-      });
-    }
-
-    if (usuario.rows[0].senha === password) {
-      return res.status(200).send({
-        message: "Login realizado com sucesso",
-        data: {},
-      });
-    } else {
-      return res.status(400).send({
-        message: "E-mail ou senha incorretos",
-        data: {},
-      });
-    }
-  } catch (error) {
-    return res.status(400).send({
-      message: "Houve um erro ao realizar o login.",
-      data: {
-        error,
-      },
-    });
-  }
-};
