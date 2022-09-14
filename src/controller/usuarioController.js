@@ -13,17 +13,26 @@ export const getUserQuery = async (cpf) => {
   return user;
 };
 
+export const deleteUserQuery = async (cpf) => {
+  await Database.query(
+    `DELETE FROM tb_foto WHERE usuario_cpf = $1;`,
+    [cpf]
+  );
+
+  await Database.query(
+    `DELETE FROM tb_user_catraca WHERE usuario_cpf = $1;`,
+    [cpf]
+  );
+
+  await Database.query(
+    `DELETE FROM tb_usuario WHERE cpf = $1;`,
+    [cpf]
+  );
+}
+
 export const getUserByEmailQuery = async (email = "") => {
   const user = await Database.query(
     `SELECT nome, email, cpf, senha FROM tb_usuario WHERE email = $1`,
-    [email]
-  );
-  return user;
-};
-
-const getUsuarioByEmail = async (email) => {
-  const user = await Database.query(
-    `SELECT * FROM tb_usuario WHERE email = $1`,
     [email]
   );
   return user;
@@ -192,3 +201,34 @@ export const postUsuario = async (req, res) => {
   }
 };
 
+export const deleteUser = async (req, res) => {
+  const { cpf } = req.body;
+
+  try {
+    const usuario = await getUserQuery(cpf);
+
+    if(usuario.rows.length === 0) {
+    return res.status(400).send({
+      message: "O usuário que deseja excluir não foi encontrado.",
+      data: {
+        error,
+      }
+    });
+
+    } else if(usuario.rows.length > 0) {
+      await deleteUserQuery(cpf);
+      return res.status(200).send({
+        message: "Usuário excluído com sucesso",
+        data: {}
+      });
+    }
+
+  } catch(error) {
+    return res.status(400).send({
+      message: "Houve um erro ao excluir o usuário!",
+      data: {
+        error,
+      }
+    });
+  }
+}
