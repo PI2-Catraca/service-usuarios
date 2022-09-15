@@ -140,7 +140,7 @@ export const authUser = async (req, res) => {
 };
 
 export const postUsuario = async (req, res) => {
-  const { cpf, nome, administrador, email, senha, fotos } = req.body;
+  const { cpf, nome, administrador, email, senha, fotos, biometria } = req.body;
 
   let hashPass = undefined;
   if(senha !== undefined) {
@@ -168,8 +168,14 @@ export const postUsuario = async (req, res) => {
       [cpf, nome, administrador, email, hashPass]
     );
 
+    if(biometria !== undefined || biometria !== '') {
+      const tipo = 'b';
+      await postFotoQuery(cpf, biometria, tipo);
+    }
+
     if (fotos?.length > 0) {
-      Promise.all(fotos.map(async (foto) => await postFotoQuery(cpf, foto)));
+      const tipo = 'f';
+      Promise.all(fotos.map(async (foto) => await postFotoQuery(cpf, foto, tipo)));
     }
 
     const data = JSON.stringify({

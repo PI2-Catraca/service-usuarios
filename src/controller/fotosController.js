@@ -1,10 +1,10 @@
 import Database from '../config/db.js';
 import { getUserQuery } from './usuarioController.js';
 
-export const postFotoQuery = async (cpf, foto) => {
+export const postFotoQuery = async (cpf, foto, tipo) => {
     const novafoto = await Database
-        .query(`INSERT INTO tb_foto (Usuario_cpf, foto) VALUES ($1, $2)`,
-            [cpf, foto]
+        .query(`INSERT INTO tb_foto (Usuario_cpf, foto, tipo) VALUES ($1, $2, $3)`,
+            [cpf, foto, tipo]
         );
     return novafoto;
 }

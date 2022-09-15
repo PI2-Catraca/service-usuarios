@@ -8,6 +8,6 @@ usuariosRouter.post('/usuario/novo', postUsuario);
 usuariosRouter.get('/usuario/todos', auth, getAllUsuarios);
 usuariosRouter.get('/usuario/cpf/:cpf', auth, getUsuarioByCpf);
 usuariosRouter.post('/usuario/login', authUser);
-usuariosRouter.delete('/usuario/excluir', auth, deleteUser);
+usuariosRouter.delete('/usuario/excluir', deleteUser);
 
 export default usuariosRouter;
