@@ -101,6 +101,9 @@ export const authUser = async (req, res) => {
 
   try {
     const user = await getUserByEmailQuery(email);
+
+    console.log(user);
+    
     if (user.rows.length > 0) {
       const userToCompare = user.rows[0];
 
@@ -182,13 +185,6 @@ export const postUsuario = async (req, res) => {
       }));
     }
 
-    const data = JSON.stringify({
-      nome,
-      cpf,
-    });
-
-    console.log(data);
-
     // const response = await axios
     //   .get("https://6352-2804-1b3-6180-ae75-fc5f-95c1-a61e-dbc4.sa.ngrok.io", {
     //     data,
@@ -197,12 +193,29 @@ export const postUsuario = async (req, res) => {
 
     // console.log(response);
 
-    const treinamentoResponse = await axios
-      .get('http://localhost:8000/criar', {
-        cpf
-      });
-
-    console.log("treinamento response:", treinamentoResponse);
+    console.log("Treinando", nome, cpf);
+    
+    var data = JSON.stringify({
+      "nome": nome,
+      "cpf": cpf
+    });
+    
+    var config = {
+      method: 'get',
+      url: 'https://e7ed-2804-18-183e-52e0-d41a-b626-83cd-7aa2.sa.ngrok.io/criar',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios(config)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
     return res.status(201).send({
       message: "Usuário cadastrado com sucesso!",
@@ -239,6 +252,8 @@ export const deleteUser = async (req, res) => {
         message: "Usuário excluído com sucesso",
         data: {}
       });
+
+      // chamar a api de treinamento aqui
     }
 
   } catch(error) {
