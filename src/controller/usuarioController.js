@@ -175,7 +175,11 @@ export const postUsuario = async (req, res) => {
 
     if (fotos?.length > 0) {
       const tipo = 'f';
-      Promise.all(fotos.map(async (foto) => await postFotoQuery(cpf, foto, tipo)));
+      Promise.all(fotos.map(async (foto) => {
+        const base64Foto = foto.photo.split(',')[1];
+        console.log("splits", foto.photo.split(',').length);
+        await postFotoQuery(cpf, base64Foto, tipo)
+      }));
     }
 
     const data = JSON.stringify({
@@ -185,18 +189,26 @@ export const postUsuario = async (req, res) => {
 
     console.log(data);
 
-    const response = await axios
-      .get("https://6352-2804-1b3-6180-ae75-fc5f-95c1-a61e-dbc4.sa.ngrok.io", {
-        data,
-      })
-      .catch((err) => console.log(err));
+    // const response = await axios
+    //   .get("https://6352-2804-1b3-6180-ae75-fc5f-95c1-a61e-dbc4.sa.ngrok.io", {
+    //     data,
+    //   })
+    //   .catch((err) => console.log(err));
 
-    console.log(response);
+    // console.log(response);
+
+    const treinamentoResponse = await axios
+      .get('http://localhost:8000/criar', {
+        cpf
+      });
+
+    console.log("treinamento response:", treinamentoResponse);
 
     return res.status(201).send({
       message: "Usuário cadastrado com sucesso!",
       data: {},
     });
+
   } catch (error) {
     return res.status(400).send({
       message: "Houve um erro ao cadastrar o usuário!",
