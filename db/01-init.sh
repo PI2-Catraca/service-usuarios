@@ -31,10 +31,10 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     );
 
     CREATE TABLE tb_User_Catraca (
+      id_user_catraca SERIAL,
       Usuario_cpf VARCHAR(11),
       Catraca_idCatraca INTEGER,
       datahora timestamp NOT NULL DEFAULT NOW(),
-      id_user_catraca NOT NULL INTEGER AUTOINCREMENT
     );
 
     ALTER TABLE tb_foto ADD CONSTRAINT FK_Foto_2
